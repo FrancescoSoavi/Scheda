@@ -290,7 +290,14 @@
   .hist-line span:last-child { color: var(--green); font-weight:700; font-variant-numeric: tabular-nums; }
   .hist-line .fbtag { font-size:0.68rem; color: var(--muted); margin-left:6px; font-weight:500; }
   .hist-del { background:none; border:none; color: var(--red); font-size:0.78rem; cursor:pointer; margin-top:10px; padding:4px 0; font-weight:600; }
-  .empty { color: var(--muted); text-align:center; padding:40px 10px; font-size:0.9rem; line-height:1.6; }
+  #viewToday, #viewProgram, #viewHistory, #viewExtra {
+    display:flex; flex-direction:column;
+    min-height: calc(100dvh - env(safe-area-inset-top) - 118px);
+  }
+  #histList, #programList { display:flex; flex-direction:column; }
+  #histList { flex:1; }
+  .empty { flex:1; color: var(--muted); text-align:center; padding:40px 10px; font-size:0.9rem; line-height:1.6;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; }
 
   /* Extra */
   .guide h3 { font-size: 1.08rem; font-weight: 750; margin: 22px 0 8px; letter-spacing:-0.03em; }
