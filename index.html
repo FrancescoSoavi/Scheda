@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#000000" id="tColor">
 <script>try{document.documentElement.dataset.pal=localStorage.getItem("fb16_pal")||"petrolio";}catch(e){document.documentElement.dataset.pal="petrolio";}</script>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JIM">
 <title>Programma 16 settimane</title>
 <style>
   html, html[data-pal="petrolio"] {
@@ -1046,6 +1052,7 @@ function cyclePalette(){
 }
 let _p0='petrolio'; try{ _p0=localStorage.getItem('fb16_pal')||'petrolio'; }catch(e){}
 applyPalette(_p0, true);
+if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('./sw.js'); }catch(e){} }
 Awake.init();
 load().then(()=>{ if(S && S.pal) applyPalette(S.pal, true); renderToday(); });
 </script>
