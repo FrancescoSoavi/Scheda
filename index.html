@@ -80,7 +80,19 @@
   button { font-family: inherit; }
   button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
   body::before { content:""; position:fixed; inset:-15vh 0 -15vh 0; background: var(--bg); z-index:-1; pointer-events:none; }
+  #viewToday, #viewProgram, #viewHistory, #viewExtra {
+    min-height: calc(100dvh - env(safe-area-inset-top) - 116px);
+    display: flex; flex-direction: column;
+  }
+  #viewHistory .empty, #viewToday .empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .hidden { display:none !important; }
+  .picker { position:fixed; inset:0; z-index:60; background: var(--bg); overflow-y:auto; padding: calc(14px + env(safe-area-inset-top)) 16px 40px; }
+  .picker .pkhead { display:flex; gap:8px; align-items:center; margin-bottom:10px; }
+  .picker .pkhead .binput { flex:1; max-width:none; }
+  .picker .pkclose { background:none; border:1px solid var(--line); color: var(--ink); border-radius:11px; padding:9px 12px; font-weight:700; cursor:pointer; }
+  .picker details { flex:1; font-size:0.86rem; font-weight:650; line-height:1.25; }
+  .picker details ul { font-weight:400; color: var(--muted); margin:6px 0 2px 16px; font-size:0.8rem; line-height:1.4; }
+  .picker .pknote { font-size:0.74rem; color: var(--muted); margin:6px 0 10px; }
 
   /* Theme toggle */
   .theme-btn {
@@ -134,9 +146,9 @@
   /* Tabs bottom */
   .tabs {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
-    background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    background: var(--surface);
     border-top: 1px solid var(--line);
-    display: flex; padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+    display: flex; padding: 8px 6px max(10px, env(safe-area-inset-bottom));
   }
   .tab {
     flex:1; background:none; border:none; color: var(--muted); border-radius: 0;
@@ -172,7 +184,37 @@
   .sugg b { display:block; font-size:1.5rem; color: var(--orange); font-weight:800; letter-spacing:-0.04em; line-height:1.1; font-variant-numeric: tabular-nums; }
   .sugg.first b { color: var(--muted); }
 
+  .ex-name-btn { background:none; border:none; padding:0; text-align:left; color:inherit; display:flex; align-items:center; gap:8px; flex-wrap:wrap; cursor:pointer; }
+  .swapcaret { font-size:0.7rem; font-weight:650; color: var(--teal); border:1px solid var(--line); border-radius:99px; padding:2px 8px; }
+  .swaptag { font-size:0.66rem; font-weight:700; color: var(--amber); }
+  .swapbox { margin-top:12px; background: var(--surface-2); border-radius:14px; padding:12px; }
+  .swapbox .q { font-size:0.76rem; color: var(--muted); margin-bottom:10px; }
+  .altrow { display:flex; align-items:center; gap:10px; padding:7px 0; border-top:1px solid var(--line); }
+  .altrow:first-of-type { border-top:none; }
+  .altname { flex:1; font-size:0.86rem; font-weight:650; line-height:1.25; }
+  .altbtns { display:flex; gap:6px; flex:none; }
+  .altbtns button { background: var(--surface); border:none; color: var(--ink); border-radius:10px; padding:8px 11px; font-size:0.76rem; font-weight:700; cursor:pointer; }
+  .altbtns button:last-child { background: var(--amber); color: var(--amber-ink); }
+  .altundo { width:100%; margin-top:10px; background:none; border:1px solid var(--line); color: var(--muted); border-radius:11px; padding:9px 0; font-size:0.78rem; font-weight:650; cursor:pointer; }
+  .brow { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .brow label { font-size:0.84rem; color: var(--muted); flex:1; }
+  .binput { background: var(--surface-2); border:none; color: var(--ink); border-radius:11px; padding:10px 12px; font-size:0.9rem; font-family:inherit; font-weight:650; max-width:60%; }
+  .blabel { font-size:0.8rem; color: var(--muted); margin:16px 0 8px; }
+  .pillrow { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:6px; }
+  .pillsel { background: var(--surface-2); border:2px solid transparent; color: var(--ink); border-radius:99px; padding:8px 13px; font-size:0.8rem; font-weight:650; cursor:pointer; }
+  .pillsel.on { border-color: var(--amber); color: var(--amber); }
+  .pillsel.danger { color: var(--red); }
+  .slotrow { display:flex; align-items:center; gap:6px; padding:7px 0; border-top:1px solid var(--line); }
+  .slotsel { flex:1; max-width:none; min-width:0; font-size:0.82rem; padding:9px 8px; }
+  .slotreps { width:58px; max-width:58px; text-align:center; font-size:0.86rem; padding:9px 4px; }
+  .slotunit { font-size:0.7rem; color: var(--muted); }
+  .slotbtns { display:flex; gap:4px; }
+  .slotbtns button { background: var(--surface-2); border:none; color: var(--muted); border-radius:9px; width:30px; height:32px; font-size:0.8rem; cursor:pointer; }
+  .slotbtns button.del { color: var(--red); }
+  .addrow { border-top:1px solid var(--line); margin-top:4px; }
+  .addbtn { background: var(--amber); color: var(--amber-ink); border:none; border-radius:11px; padding:10px 14px; font-size:0.8rem; font-weight:700; cursor:pointer; }
   .howto-btn { background:none; border:none; color: var(--teal); font-size:0.82rem; font-weight:650; padding:13px 0 0; cursor:pointer; }
+  .video-link { display:inline-block; margin-top:8px; color: var(--teal); font-size:0.82rem; font-weight:700; text-decoration:none; }
   .howto { color: var(--muted); font-size:0.82rem; margin-top:10px; line-height:1.55; }
   .howto.warn { color: var(--ink); }
   .howto ul { padding-left: 16px; }
@@ -363,10 +405,18 @@
 </div>
 
 <div id="viewProgram" class="hidden">
-  <div class="hdr"><div class="week">Programma</div><div class="meta">16 settimane · martedì, giovedì, sabato</div></div>
+  <div class="hdr"><div class="week">Programma</div><div class="meta" id="progMeta"></div></div>
+  <div class="io-bar" id="progActions"></div>
   <div id="programList"></div>
   <div class="sec-title">Come progredire</div>
   <div class="card"><div class="rule" id="rulesBox"></div></div>
+</div>
+
+<div id="picker" class="picker hidden"></div>
+
+<div id="viewBuild" class="hidden">
+  <div class="hdr"><div class="week">Costruttore</div><div class="meta">Scegli, genera, poi sistema a mano</div></div>
+  <div id="buildBox"></div>
 </div>
 
 <div id="viewHistory" class="hidden">
@@ -467,6 +517,207 @@ const LIB = {
 
 const INC = { db:2, bb:2.5, kb:4, cable:2.5, ez:2.5 };
 
+/* ========================================================= LIBRERIA ALTERNATIVE ========================================================= */
+Object.assign(LIB, {
+  boxsquat: { name:"Box squat su jump box", kind:"reps", load:"kb", def:6, warn:true, eq:["box","kb"], howto:[
+    "Jump box dietro di te, piedi larghezza spalle, kettlebell al petto se usi carico.",
+    "Sposta il bacino indietro e scendi finché i glutei sfiorano il box: la profondità è decisa dal box, non dalla sensazione.",
+    "Non crollare seduto: tocca e risali.",
+    "Ginocchia sempre in linea coi piedi, mai verso l'interno (chiave ITB)."] },
+  wallsit: { name:"Wall sit (isometrico al muro)", kind:"time", load:null, warn:true, eq:["muro"], howto:[
+    "Schiena piatta al muro, piedi avanti, scendi finché le cosce sono a metà strada dalla parallela.",
+    "Ginocchia sopra i piedi, mai in dentro. Se il ginocchio protesta, resta più alto.",
+    "Peso sui talloni, respira normalmente, non trattenere il fiato."] },
+  stepup: { name:"Salita su box bassa", kind:"reps", load:"db", def:6, warn:true, eq:["box","db"], howto:[
+    "Box basso: il ginocchio non deve superare i 60-70° di flessione. Se è alto, è un altro esercizio.",
+    "Sali spingendo col tallone della gamba sul box, senza slancio dell'altra gamba.",
+    "Scendi lentamente, controllando. Il lavoro vero è nella discesa.",
+    "Ginocchio in linea col piede per tutta la salita (ITB)."] },
+  rdldb: { name:"Stacco rumeno manubri", kind:"reps", load:"db", def:8, eq:["db"], howto:[
+    "Manubri davanti alle cosce, presa neutra, ginocchia con una flessione minima fissa.",
+    "Spingi il bacino indietro: scendono i manubri lungo la gamba, non si piega il ginocchio.",
+    "Schiena dritta, scapole leggermente indietro, sguardo avanti-basso.",
+    "Scendi finché senti tirare i femorali, poi risali contraendo i glutei."] },
+  goodmorning: { name:"Good morning con bilanciere", kind:"reps", load:"bb", def:20, eq:["bb"], howto:[
+    "Bilanciere sui trapezi, non sul collo. Carico basso: qui la tecnica conta più del peso.",
+    "Ginocchia poco piegate, bacino indietro, busto che scende verso il parallelo.",
+    "Schiena neutra per tutto il movimento: al primo cedimento della curva, risali.",
+    "Risali spingendo il bacino avanti."] },
+  floorpress: { name:"Floor press manubri", kind:"reps", load:"db", def:6, eq:["db"], howto:[
+    "Sdraiato a terra, ginocchia piegate, manubri sopra il petto.",
+    "Scendi finché i tricipiti toccano il pavimento, pausa di un istante, poi spingi.",
+    "Il pavimento limita l'escursione: è la variante che protegge la spalla.",
+    "Gomiti a 45° dal busto, non aperti a 90°."] },
+  benchbb: { name:"Panca piana bilanciere", kind:"reps", load:"bb", def:20, eq:["bb","panca","rack"], howto:[
+    "Barra sui ganci bassi del rack, occhi sotto la barra, scapole retratte e depresse.",
+    "Presa poco più larga delle spalle, polsi dritti sopra i gomiti.",
+    "Scendi controllato verso la parte bassa del petto, gomiti a 45°.",
+    "Piedi piantati, glutei sempre sulla panca. Senza un compagno usa i fermi di sicurezza."] },
+  arnold: { name:"Arnold press", kind:"reps", load:"db", def:5, eq:["db"], howto:[
+    "Seduto con schienale alto. Parti con i manubri davanti al viso, palmi verso di te.",
+    "Salendo ruota i polsi verso l'esterno: in alto i palmi guardano avanti.",
+    "Non bloccare i gomiti in alto, non inarcare la schiena.",
+    "Discesa lenta ripercorrendo la stessa rotazione."] },
+  pressbb: { name:"Military press bilanciere", kind:"reps", load:"bb", def:20, eq:["bb"], howto:[
+    "In piedi, barra sulle clavicole, presa poco più larga delle spalle, gomiti leggermente avanti.",
+    "Glutei e addome contratti: il busto non si inarca.",
+    "Spingi in alto portando la testa leggermente indietro, poi riallinea: la barra finisce sopra le orecchie.",
+    "Discesa controllata fino alle clavicole."] },
+  landmine: { name:"Landmine press", kind:"reps", load:"bb", def:10, eq:["bb","rack"], howto:[
+    "Un'estremità del bilanciere bloccata in un angolo, l'altra all'altezza della spalla.",
+    "In piedi o in ginocchio, spingi in avanti-alto lungo la diagonale.",
+    "È la spinta sopra la testa più gentile per la spalla: usala se il military dà fastidio.",
+    "Un braccio per volta, core contratto, niente rotazione del busto."] },
+  chinassist: { name:"Chin-up assistite con elastico", kind:"reps", load:null, eq:["rack","elastico"], howto:[
+    "Presa supina (palmi verso di te) larghezza spalle, elastico sotto il ginocchio.",
+    "Parti tirando le scapole in basso, poi porta il mento sopra la sbarra.",
+    "Con la presa supina il bicipite aiuta: spesso ne fai più che con le trazioni prone.",
+    "Discesa lenta fino a braccia tese, senza dondolare."] },
+  latiso: { name:"Tenuta isometrica alla sbarra", kind:"time", load:null, eq:["rack"], howto:[
+    "Sali con l'aiuto della panca fino ad avere il mento sopra la sbarra.",
+    "Tieni la posizione: scapole in basso, gomiti stretti, corpo fermo.",
+    "Quando non tieni più, scendi lentamente invece di mollare di colpo.",
+    "Costruisce la forza che serve alla prima trazione completa."] },
+  rowbb: { name:"Rematore con bilanciere", kind:"reps", load:"bb", def:20, eq:["bb"], howto:[
+    "Busto inclinato a circa 45°, ginocchia morbide, schiena neutra.",
+    "Presa poco più larga dei fianchi, barra che sfiora le cosce.",
+    "Tira verso l'ombelico portando i gomiti indietro, scapole che si stringono.",
+    "Non tirare col busto: se devi raddrizzarti per completare, il peso è troppo."] },
+  chestrow: { name:"Rematore su panca inclinata", kind:"reps", load:"db", def:8, eq:["db","panca"], howto:[
+    "Panca a 30-45°, petto appoggiato, manubri a braccia tese verso il pavimento.",
+    "Tira portando i gomiti indietro lungo i fianchi, scapole strette.",
+    "Il petto resta incollato alla panca: è questo che toglie carico alla schiena bassa.",
+    "Discesa controllata fino ad allungare."] },
+  rowband: { name:"Rematore con elastico", kind:"reps", load:null, eq:["elastico"], howto:[
+    "Elastico ancorato al rack all'altezza dello sterno, un passo indietro per metterlo in tensione.",
+    "Tira verso il basso ventre, gomiti vicino ai fianchi, scapole strette.",
+    "Ritorno lento controllando l'elastico, senza farti tirare in avanti.",
+    "Più indietro ti sposti, più è duro: è così che progredisci."] },
+  suitcase: { name:"Suitcase carry (un lato)", kind:"time", load:"db", def:14, eq:["db","kb"], howto:[
+    "Un solo manubrio, su un lato. L'altra mano libera lungo il corpo.",
+    "Cammina restando perfettamente verticale: il busto non si inclina dalla parte del peso.",
+    "È il core laterale a lavorare. Metà del tempo per lato.",
+    "Spalle indietro, passi corti e regolari."] },
+  waiter: { name:"Waiter walk (kettlebell sopra la testa)", kind:"time", load:"kb", def:8, eq:["kb"], howto:[
+    "Kettlebell sopra la testa a braccio teso, polso dritto, gomito bloccato.",
+    "Spalla attiva: spingi verso l'alto come se volessi allungarti.",
+    "Cammina lento guardando avanti. Metà tempo per lato.",
+    "Carico leggero: qui conta la stabilità della spalla, non i chili."] },
+  rackcarry: { name:"Rack carry (kettlebell al petto)", kind:"time", load:"kb", def:12, eq:["kb"], howto:[
+    "Uno o due kettlebell in posizione rack: avambraccio verticale, peso appoggiato all'avambraccio e al petto.",
+    "Gomiti stretti, costole basse, addome contratto.",
+    "Cammina respirando corto e costante. Metà tempo per lato se ne usi uno.",
+    "Alternativa al farmer walk quando la presa cede prima delle gambe."] },
+  curldb: { name:"Curl manubri", kind:"reps", load:"db", def:8, eq:["db"], howto:[
+    "In piedi, manubri ai fianchi, palmi avanti.",
+    "Sali senza muovere i gomiti, ruota leggermente il polso in alto.",
+    "Discesa lenta 2-3 s fino a braccia quasi tese.",
+    "Se il busto dondola, scendi di peso."] },
+  curlband: { name:"Curl con elastico", kind:"reps", load:null, eq:["elastico"], howto:[
+    "Elastico sotto i piedi, estremità in mano, gomiti ai fianchi.",
+    "Sali lentamente: l'elastico è più duro proprio in chiusura, sfruttalo.",
+    "Ritorno controllato di 3 s, senza farti riportare giù di scatto."] },
+  skull: { name:"Skull crusher manubri", kind:"reps", load:"db", def:5, eq:["db","panca"], howto:[
+    "Sdraiato, manubri sopra le spalle con presa neutra.",
+    "Piega solo i gomiti portando i manubri ai lati della testa.",
+    "Gomiti fermi e puntati al soffitto: non si aprono verso l'esterno.",
+    "Coi manubri il polso resta neutro: meno fastidio al gomito rispetto alla barra."] },
+  pushdown: { name:"Push-down con elastico", kind:"reps", load:null, eq:["elastico","rack"], howto:[
+    "Elastico agganciato in alto al rack, gomiti ai fianchi.",
+    "Estendi le braccia verso il basso senza muovere i gomiti.",
+    "Chiusura completa, poi ritorno lento fino a sentire il tricipite in allungo.",
+    "Busto leggermente avanti, core contratto."] },
+  overheaddb: { name:"Estensioni sopra la testa (manubrio)", kind:"reps", load:"db", def:8, eq:["db"], howto:[
+    "Un manubrio tenuto con due mani sopra la testa, braccia tese.",
+    "Scendi dietro la nuca piegando solo i gomiti, che restano stretti.",
+    "Fermati dove la spalla resta comoda, poi estendi.",
+    "Se la spalla tira, passa al push-down."] },
+  pallof: { name:"Pallof press con elastico", kind:"reps", load:null, eq:["elastico","rack"], howto:[
+    "Elastico ancorato al rack all'altezza del petto, tu di lato, un passo per metterlo in tensione.",
+    "Mani al petto, poi spingi in avanti fino a braccia tese.",
+    "L'elastico cerca di ruotarti: il tuo lavoro è non farti ruotare. Anche e spalle restano quadrate.",
+    "Tieni 2 s a braccia tese, torna. Metà ripetizioni per lato."] },
+  birddog: { name:"Bird dog", kind:"reps", load:null, eq:[], howto:[
+    "A quattro zampe, mani sotto le spalle, ginocchia sotto le anche.",
+    "Allunga braccio destro e gamba sinistra fino all'orizzontale, senza inarcare la schiena.",
+    "Bacino fermo e quadrato: se si apre, stai andando troppo in alto.",
+    "Tieni 2 s, torna, alterna. Lento."] },
+});
+
+/* schema motorio: decide quali alternative sono ammesse in uno slot */
+const PAT = {
+  goblet:'knee', boxsquat:'knee', wallsit:'knee', stepup:'knee',
+  rdl:'hinge', rdldb:'hinge', goodmorning:'hinge', kbswing:'hinge', kbdl:'hinge', hipthrust:'hinge',
+  bench:'pushH', incline:'pushH', floorpress:'pushH', benchbb:'pushH', pushup:'pushH',
+  press:'pushV', arnold:'pushV', pressbb:'pushV', landmine:'pushV',
+  lat:'pullV', chinneg:'pullV', chinassist:'pullV', latiso:'pullV',
+  row:'pullH', latclose:'pullH', rowbb:'pullH', chestrow:'pullH', rowband:'pullH',
+  farmer:'carry', suitcase:'carry', waiter:'carry', rackcarry:'carry',
+  curl:'curl', curldb:'curl', hammer:'curl', curlband:'curl',
+  french:'tri', skull:'tri', pushdown:'tri', overheaddb:'tri',
+  plank:'core', deadbug:'core', sideplank:'core', pallof:'core', birddog:'core',
+  latraise:'delt',
+};
+/* prevenzione e mobilità: non si sostituiscono */
+const LOCKED = ['clam','abd','bandwalk','bridge','facepull','walk','circ','roll','stretch'];
+
+function swapFor(id){
+  const sw = S && S.swaps;
+  if(!sw) return id;
+  if(sw.today && sw.today.date === todayISO() && sw.today.map && sw.today.map[id]) return sw.today.map[id];
+  if(sw.perm && sw.perm[id]) return sw.perm[id];
+  return id;
+}
+function altsFor(id){
+  if(LOCKED.includes(id) || !PAT[id]) return [];
+  const cur = swapFor(id);
+  const eq = (S && S.eq) ? S.eq : ALL_EQ;
+  const lim = (S && S.limits) ? S.limits : {};
+  return Object.keys(PAT).filter(k => PAT[k]===PAT[id] && !LIB[k].ext && k!==cur && k!==id && eqOk(k,eq) && riskOk(k,lim));
+}
+function ensureSwaps(){ if(!S.swaps) S.swaps = { perm:{}, today:{ date:'', map:{} } }; if(!S.swaps.today) S.swaps.today={date:'',map:{}}; if(!S.swaps.perm) S.swaps.perm={}; }
+function syncActive(){
+  const a=S.active; if(!a) return;
+  const info=sessionInfo(a.week,a.letter);
+  const exs=allExercises(info); const keys=new Set(exs.map(e=>e.key));
+  exs.forEach(e=>{
+    if(!a.sets[e.key]) a.sets[e.key]=Array(e.sets).fill(false);
+    if(e.lib.load && a.weights[e.key]==null) a.weights[e.key]=suggest(e.id, info).w;
+  });
+  Object.keys(a.sets).forEach(k=>{ if(!keys.has(k)) delete a.sets[k]; });
+  Object.keys(a.weights).forEach(k=>{ if(!keys.has(k)) delete a.weights[k]; });
+  save();
+}
+function toggleSwapBox(id){ S.active._swap=S.active._swap||{}; S.active._swap[id]=!S.active._swap[id]; renderToday(); }
+function doSwap(orig, newId, perm){
+  ensureSwaps(); keepExt(newId);
+  const curKey = swapFor(orig);
+  const oldW = S.active && S.active.weights ? S.active.weights[curKey] : null;
+  if(perm){ S.swaps.perm[orig]=newId; if(S.swaps.today.map) delete S.swaps.today.map[orig]; }
+  else {
+    if(S.swaps.today.date!==todayISO()) S.swaps.today={ date:todayISO(), map:{} };
+    S.swaps.today.map[orig]=newId;
+  }
+  const carry = (LIB[newId].load && LIB[curKey] && LIB[newId].load===LIB[curKey].load && !lastRecord(newId) && oldW!=null) ? oldW : null;
+  syncActive();
+  if(carry!=null){ S.active.weights[newId]=carry; }
+  if(S.active._swap) S.active._swap[orig]=false;
+  save(); renderToday();
+  toast(perm ? 'Sostituito da qui in poi' : 'Sostituito per oggi');
+}
+function swapSearch(orig){
+  openPicker(PAT[orig], S.eq, S.limits, [['Oggi', id=>doSwap(orig,id,false)], ['Sempre', id=>doSwap(orig,id,true)]]);
+}
+function undoSwap(orig){
+  ensureSwaps();
+  delete S.swaps.perm[orig];
+  if(S.swaps.today.map) delete S.swaps.today.map[orig];
+  syncActive();
+  if(S.active._swap) S.active._swap[orig]=false;
+  save(); renderToday(); toast('Esercizio originale ripristinato');
+}
+
+
 /* =========================================================
    PROGRAM: 4 phases × 4 weeks × 3 sessions (A martedì, B giovedì, C sabato)
    Each session: warmup[] , main[] , finisher (optional), cooldown[]
@@ -517,16 +768,278 @@ const SLOT_DAYS  = ["martedì","giovedì","sabato"];
 const TRAIN_DOW  = [2,4,6]; // Tue Thu Sat
 const TOTAL = 48;
 
+
+/* ========================================================= ATTREZZATURA / LIMITI ========================================================= */
+const ALL_EQ = ['db','bb','ez','kb','panca','rack','elastico','box','palla','cavi','macchine','altro'];
+const EQ_LABEL = { db:'Manubri', bb:'Bilanciere', ez:'Bilanciere EZ', kb:'Kettlebell', panca:'Panca', rack:'Rack / sbarra', elastico:'Elastici', box:'Box / rialzo', palla:'Palla medica', cavi:'Cavi', macchine:'Macchine', altro:'Fitball, rullo e altro' };
+const EQOF = {
+  goblet:['kb'], boxsquat:['box','kb'], wallsit:[], stepup:['box','db'],
+  rdl:['bb'], rdldb:['db'], goodmorning:['bb'], kbswing:['kb'], kbdl:['kb'], hipthrust:['bb','panca'],
+  bench:['db','panca'], incline:['db','panca'], floorpress:['db'], benchbb:['bb','panca','rack'], pushup:['panca'],
+  press:['db'], arnold:['db','panca'], pressbb:['bb'], landmine:['bb','rack'],
+  lat:['rack','elastico'], chinneg:['rack'], chinassist:['rack','elastico'], latiso:['rack'],
+  row:['db','panca'], latclose:['bb','rack'], rowbb:['bb'], chestrow:['db','panca'], rowband:['elastico','rack'],
+  farmer:['db'], suitcase:['db'], waiter:['kb'], rackcarry:['kb'],
+  curl:['ez'], curldb:['db'], hammer:['db'], curlband:['elastico'],
+  french:['ez','panca'], skull:['db','panca'], pushdown:['elastico','rack'], overheaddb:['db'],
+  plank:[], deadbug:[], sideplank:[], pallof:['elastico','rack'], birddog:[], latraise:['db'],
+};
+const RISK = {
+  press:['shoulder'], pressbb:['shoulder'], arnold:['shoulder'], waiter:['shoulder'], overheaddb:['shoulder'], french:['shoulder'],
+  rdl:['back'], goodmorning:['back'], rowbb:['back'], kbdl:['back'],
+  stepup:['knee'], wallsit:['knee'],
+};
+const PAT_LABEL = {
+  knee:'Gambe — spinta', hinge:'Gambe — cerniera anca', pushH:'Spinta orizzontale', pushV:'Spinta sopra la testa',
+  pullV:'Trazione verticale', pullH:'Trazione orizzontale', carry:'Trasporto', curl:'Bicipiti', tri:'Tricipiti',
+  core:'Core', delt:'Spalle laterali', traps:'Trapezi', hams:'Femorali', hipab:'Abduttori / adduttori',
+  calf:'Polpacci', forearm:'Avambracci', cardio:'Cardio', mob:'Mobilità e allungamento',
+};
+function eqOk(id, eq){ return (EQOF[id]||[]).every(e=>eq.includes(e)); }
+function riskOk(id, limits){ return !(RISK[id]||[]).some(r=>limits[r]); }
+function candidates(pat, eq, limits){ return Object.keys(PAT).filter(k=>PAT[k]===pat && !LIB[k].ext && eqOk(k,eq) && riskOk(k,limits)); }
+
+/* ========================================================= LIBRERIA ESTERNA =========================================================
+   1.324 esercizi da hasaneyldrm/exercises-dataset (MIT, vedi LICENZA-ESERCIZI.txt), nomi tradotti, niente GIF.
+   Non verificati: il costruttore guidato non li propone, si scelgono a mano dalla ricerca. */
+let EXT_IDS = [];
+function addExt(map){
+  Object.keys(map).forEach(id=>{ if(LIB[id]) return; const e=map[id];
+    LIB[id]={...e, ext:true}; PAT[id]=e.pat; EQOF[id]=e.eq; if(e.risk) RISK[id]=e.risk; });
+}
+async function loadExt(){
+  try{ const m=await (await fetch('./esercizi.json')).json(); addExt(m); EXT_IDS=Object.keys(m); }catch(e){}
+}
+// gli esercizi di libreria usati restano nei dati salvati: la scheda funziona anche se esercizi.json non carica
+function keepExt(id){ const l=LIB[id]; if(!l || !l.ext) return; DB.ext=DB.ext||{}; if(!DB.ext[id]){ const {ext, ...e}=l; DB.ext[id]=e; } }
+
+// shortcut: ricerca YouTube, non un video scelto; serve la rete
+function videoLink(name){ return `<a class="video-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(name+' esecuzione')}" target="_blank" rel="noopener">▶ Guarda video</a>`; }
+
+let PK = null;   // { pat, eq, limits, acts:[[label, fn(id)]] }
+function openPicker(pat, eq, limits, acts){ PK={pat, eq, limits, acts}; renderPicker(); }
+function closePicker(){ PK=null; renderPicker(); }
+function pickDo(id, i){ const fn=PK.acts[i][1]; closePicker(); fn(id); }
+function renderPicker(){
+  const el=document.getElementById('picker');
+  if(!PK){ el.classList.add('hidden'); el.innerHTML=''; return; }
+  el.classList.remove('hidden');
+  const pats=Object.keys(PAT_LABEL).map(k=>`<option value="${k}" ${PK.pat===k?'selected':''}>${PAT_LABEL[k]}</option>`).join('');
+  el.innerHTML=`<div class="pkhead"><input id="pkq" class="binput" type="search" placeholder="Cerca esercizio" oninput="renderPickList()">
+      <button class="pkclose" onclick="closePicker()">Chiudi</button></div>
+    <select id="pkpat" class="binput" style="max-width:none;width:100%" onchange="PK.pat=this.value||null; renderPickList()"><option value="">Tutti gli schemi</option>${pats}</select>
+    <div class="pknote">Libreria esterna: indicazioni non verificate per ginocchio, spalle e schiena. Filtrata su attrezzatura e zone da proteggere.</div>
+    <div id="pklist"></div>`;
+  renderPickList();
+}
+function renderPickList(){
+  const box=document.getElementById('pklist'); if(!box) return;
+  if(!EXT_IDS.length){ box.innerHTML='<div class="empty">Libreria in caricamento… serve la rete alla prima apertura.</div>'; return; }
+  const q=(document.getElementById('pkq').value||'').trim().toLowerCase();
+  const ids=EXT_IDS.filter(k=>(!PK.pat||PAT[k]===PK.pat) && eqOk(k,PK.eq) && riskOk(k,PK.limits) && (!q || LIB[k].name.toLowerCase().includes(q)));
+  box.innerHTML = (ids.length ? '' : '<div class="empty">Nessun esercizio compatibile.</div>') +
+    ids.slice(0,60).map(k=>`<div class="altrow"><details><summary>${LIB[k].name}</summary><ul>${LIB[k].howto.map(h=>'<li>'+h+'</li>').join('')}</ul>${videoLink(LIB[k].name)}</details>
+      <div class="altbtns">${PK.acts.map((a,i)=>`<button onclick="pickDo('${k}',${i})">${a[0]}</button>`).join('')}</div></div>`).join('') +
+    (ids.length>60 ? `<div class="pknote">Altri ${ids.length-60}: affina la ricerca.</div>` : '');
+}
+
+/* ========================================================= PROFILI ========================================================= */
+function blankProfile(name){
+  return { name:name, limits:{knee:false,shoulder:false,back:false}, eq:ALL_EQ.slice(),
+           prog:null, completed:[], active:null, swaps:{perm:{},today:{date:'',map:{}}}, pal:'petrolio' };
+}
+function profileList(){ return Object.keys(DB.profiles).map(id=>({id, name:DB.profiles[id].name})); }
+function switchProfile(id){
+  if(!DB.profiles[id] || id===DB.current) return;
+  DB.profiles[DB.current]=S;
+  DB.current=id; S=DB.profiles[id];
+  ensureActive(); STORE.set(DB);
+  applyPalette(S.pal||'petrolio', true);
+  renderToday(); showView('Today'); toast('Profilo: '+S.name);
+}
+function newProfile(){
+  const n=prompt('Nome del nuovo profilo'); if(!n||!n.trim()) return;
+  const id='p'+Date.now().toString(36);
+  DB.profiles[id]=blankProfile(n.trim());
+  DB.profiles[DB.current]=S; STORE.set(DB); switchProfile(id);
+  setTimeout(()=>{ openBuilder(); toast('Profilo creato — costruisci la sua scheda'); }, 60);
+}
+function renameProfile(){ const n=prompt('Nuovo nome', S.name); if(!n||!n.trim()) return; S.name=n.trim(); save(); renderExtra(); }
+function deleteProfile(id){
+  if(Object.keys(DB.profiles).length<2){ alert('Deve restare almeno un profilo.'); return; }
+  if(!confirm('Eliminare il profilo "'+DB.profiles[id].name+'" con tutto il suo storico?')) return;
+  delete DB.profiles[id];
+  if(DB.current===id){ DB.current=Object.keys(DB.profiles)[0]; S=DB.profiles[DB.current]; ensureActive(); }
+  STORE.set(DB); renderToday(); renderExtra(); toast('Profilo eliminato');
+}
+function toggleLimit(k){ S.limits[k]=!S.limits[k]; save(); renderExtra(); }
+function toggleEq(k){ const i=S.eq.indexOf(k); if(i<0) S.eq.push(k); else S.eq.splice(i,1); save(); renderExtra(); }
+
+/* ========================================================= PIANO: preset o scheda costruita ========================================================= */
+function plan(){ return (S && S.prog) ? S.prog : null; }
+function planWeeks(){ const p=plan(); return p ? p.weeks : 16; }
+function planLetters(){ const p=plan(); return p ? Object.keys(p.sessions) : ["A","B","C"]; }
+function planDays(){ const p=plan(); return p ? p.days : SLOT_DAYS; }
+function planTotal(){ return planWeeks()*planLetters().length; }
+function planName(){ const p=plan(); return p ? p.name : 'Programma 16 settimane'; }
+
+/* ========================================================= COSTRUTTORE ========================================================= */
+const TPL_DAYS = { 2:['martedì','venerdì'], 3:['martedì','giovedì','sabato'], 4:['lunedì','martedì','giovedì','venerdì'] };
+const TPL_SLOTS = {
+  2:[ ['knee','pushH','pullH','pushV','core'], ['hinge','pullV','pushH','carry','core'] ],
+  3:[ ['knee','pushH','pullH','core'], ['hinge','pushV','pullV','carry'], ['knee','pushH','pullH','curl','tri','core'] ],
+  4:[ ['pushH','pushV','tri','delt'], ['knee','hinge','core'], ['pullV','pullH','curl','carry'], ['hinge','knee','core'] ],
+};
+const GOALS = {
+  rientro:  { label:'Rientro dopo stop', reps:12, sets:[2,3,3,2], rs:75, re:90 },
+  recomp:   { label:'Ricomposizione',    reps:10, sets:[3,3,4,2], rs:60, re:90 },
+  forza:    { label:'Forza',             reps:6,  sets:[3,4,4,2], rs:90, re:120 },
+};
+let B = null;
+
+function openBuilder(){
+  B = { step:'wizard', days:3, weeks:8, goal:'recomp', limits:{...S.limits}, eq:S.eq.slice(),
+        name:'Scheda di '+S.name, sessions:null };
+  showView('Build'); renderBuild();
+}
+function closeBuilder(){ B=null; showView('Program'); }
+function bSet(k,v){ B[k]=(k==='days'||k==='weeks')?+v:v; renderBuild(); }
+function bToggleLimit(k){ B.limits[k]=!B.limits[k]; renderBuild(); }
+function bToggleEq(k){ const i=B.eq.indexOf(k); if(i<0) B.eq.push(k); else B.eq.splice(i,1); renderBuild(); }
+
+function generateProgram(){
+  const g=GOALS[B.goal]; const tpl=TPL_SLOTS[B.days]; const letters=['A','B','C','D'].slice(0,B.days);
+  const sessions={}; const used=[];
+  letters.forEach((L,i)=>{
+    const main=[];
+    tpl[i].forEach(pat=>{
+      const cands=candidates(pat,B.eq,B.limits);
+      if(!cands.length) return;
+      const pick = cands.find(c=>!used.includes(c)) || cands[0];
+      used.push(pick);
+      const lib=LIB[pick];
+      main.push([pick, lib.kind==='time' ? (pat==='core'?40:40) : g.reps]);
+    });
+    sessions[L]={ main, finisher:null };
+  });
+  B.sessions=sessions; B.step='editor'; renderBuild();
+}
+function bChange(L,i,id){ B.sessions[L].main[i][0]=id; renderBuild(); }
+function bReps(L,i,v){ const n=parseInt(v,10); if(!isNaN(n)&&n>0) B.sessions[L].main[i][1]=n; }
+function bMove(L,i,d){ const m=B.sessions[L].main; const j=i+d; if(j<0||j>=m.length) return; const t=m[i]; m[i]=m[j]; m[j]=t; renderBuild(); }
+function bRemove(L,i){ B.sessions[L].main.splice(i,1); renderBuild(); }
+function bAdd(L){
+  const sel=document.getElementById('addPat_'+L); const pat=sel.value;
+  const cands=candidates(pat,B.eq,B.limits);
+  if(!cands.length){ openPicker(pat, B.eq, B.limits, [['Aggiungi', id=>bPush(L,id)]]); return; }
+  bPush(L, cands[0]);
+}
+function bPush(L,id){ B.sessions[L].main.push([id, LIB[id].kind==='time'?40:GOALS[B.goal].reps]); renderBuild(); }
+function bSearch(L,i){ openPicker(PAT[B.sessions[L].main[i][0]], B.eq, B.limits, [['Scegli', id=>bChange(L,i,id)]]); }
+function saveProgram(){
+  const g=GOALS[B.goal];
+  const empty=Object.keys(B.sessions).filter(L=>!B.sessions[L].main.length);
+  if(empty.length){ alert('Sessione '+empty.join(', ')+' vuota: aggiungi almeno un esercizio.'); return; }
+  S.prog={ name:B.name||('Scheda di '+S.name), weeks:B.weeks, days:TPL_DAYS[B.days],
+           setsByWeek:g.sets, restSet:g.rs, restEx:g.re, deloadEvery:4,
+           desc:'Scheda costruita: '+GOALS[B.goal].label.toLowerCase()+', '+B.days+' sessioni a settimana, '+B.weeks+' settimane. Scarico ogni 4 settimane.',
+           sessions:B.sessions, goal:B.goal };
+  Object.values(B.sessions).forEach(x=>x.main.forEach(r=>keepExt(r[0])));
+  S.limits={...B.limits}; S.eq=B.eq.slice(); S.swaps={perm:{},today:{date:'',map:{}}};
+  S.active=null; ensureActive(); save();
+  B=null; renderToday(); showView('Today'); toast('Scheda attiva');
+}
+function usePreset(){
+  if(!confirm('Tornare al programma 16 settimane? La scheda costruita viene rimossa, lo storico resta.')) return;
+  S.prog=null; S.active=null; ensureActive(); save(); renderToday(); showView('Today'); toast('Programma 16 settimane attivo');
+}
+
+function editProgram(){
+  const pl=plan(); if(!pl) return;
+  const days=Object.keys(pl.sessions).length;
+  B={ step:'editor', days:days, weeks:pl.weeks, goal:pl.goal||'recomp', limits:{...S.limits}, eq:S.eq.slice(),
+      name:pl.name, sessions:JSON.parse(JSON.stringify(pl.sessions)) };
+  showView('Build'); renderBuild();
+}
+function renderBuild(){
+  const el=document.getElementById('buildBox');
+  if(!B){ el.innerHTML=''; return; }
+  if(B.step==='wizard'){
+    const eqHtml=ALL_EQ.map(k=>`<button class="pillsel ${B.eq.includes(k)?'on':''}" onclick="bToggleEq('${k}')">${EQ_LABEL[k]}</button>`).join('');
+    const limHtml=[['knee','Ginocchia'],['shoulder','Spalle'],['back','Schiena']].map(([k,lab])=>
+      `<button class="pillsel ${B.limits[k]?'on':''}" onclick="bToggleLimit('${k}')">${lab}</button>`).join('');
+    el.innerHTML=`
+    <div class="card">
+      <div class="phase-name">Nuova scheda</div>
+      <div class="phase-desc">Rispondi a quattro domande, poi puoi cambiare tutto a mano.</div>
+      <div class="brow"><label>Nome</label><input class="binput" value="${B.name}" onchange="B.name=this.value"></div>
+      <div class="brow"><label>Obiettivo</label><select class="binput" onchange="bSet('goal',this.value)">
+        ${Object.keys(GOALS).map(k=>`<option value="${k}" ${B.goal===k?'selected':''}>${GOALS[k].label}</option>`).join('')}</select></div>
+      <div class="brow"><label>Sessioni a settimana</label><select class="binput" onchange="bSet('days',this.value)">
+        ${[2,3,4].map(n=>`<option value="${n}" ${B.days===n?'selected':''}>${n}</option>`).join('')}</select></div>
+      <div class="brow"><label>Durata</label><select class="binput" onchange="bSet('weeks',this.value)">
+        ${[4,8,12,16].map(n=>`<option value="${n}" ${B.weeks===n?'selected':''}>${n} settimane</option>`).join('')}</select></div>
+      <div class="blabel">Zone da proteggere — gli esercizi a rischio non verranno proposti</div>
+      <div class="pillrow">${limHtml}</div>
+      <div class="blabel">Attrezzatura disponibile</div>
+      <div class="pillrow">${eqHtml}</div>
+      <button class="save-btn" onclick="generateProgram()">Genera la scheda</button>
+      <button class="altundo" onclick="closeBuilder()">Annulla</button>
+    </div>`;
+    return;
+  }
+  const g=GOALS[B.goal];
+  let html=`<div class="card"><div class="phase-name">${B.name}</div>
+    <div class="phase-desc">${B.days} sessioni · ${B.weeks} settimane · ${g.sets.join('-')} serie nel ciclo · recupero ${g.rs}s tra serie, ${g.re}s tra esercizi. Scarico ogni quarta settimana.</div></div>`;
+  Object.keys(B.sessions).forEach((L,i)=>{
+    const rows=B.sessions[L].main.map((row,idx)=>{
+      const id=row[0]; const pat=PAT[id];
+      const cands=candidates(pat,B.eq,B.limits); if(!cands.includes(id)) cands.unshift(id);
+      const opts=cands.map(k=>`<option value="${k}" ${k===id?'selected':''}>${LIB[k].name}</option>`).join('');
+      const unit=LIB[id].kind==='time'?'s':'rip';
+      return `<div class="slotrow">
+        <select class="binput slotsel" onchange="bChange('${L}',${idx},this.value)">${opts}</select>
+        <input class="binput slotreps" type="number" inputmode="numeric" value="${row[1]}" onchange="bReps('${L}',${idx},this.value)"><span class="slotunit">${unit}</span>
+        <div class="slotbtns">
+          <button onclick="bSearch('${L}',${idx})" title="Cerca nella libreria">⌕</button>
+          <button onclick="bMove('${L}',${idx},-1)">▲</button>
+          <button onclick="bMove('${L}',${idx},1)">▼</button>
+          <button class="del" onclick="bRemove('${L}',${idx})">✕</button>
+        </div></div>`;
+    }).join('');
+    const patOpts=Object.keys(PAT_LABEL).map(k=>`<option value="${k}">${PAT_LABEL[k]}</option>`).join('');
+    html+=`<div class="card"><div class="phase-name">Sessione ${L} · ${TPL_DAYS[B.days][i]}</div>${rows||'<div class="phase-desc">Nessun esercizio.</div>'}
+      <div class="slotrow addrow"><select class="binput slotsel" id="addPat_${L}">${patOpts}</select>
+      <button class="addbtn" onclick="bAdd('${L}')">+ Aggiungi</button></div></div>`;
+  });
+  html+=`<button class="save-btn" onclick="saveProgram()">Attiva questa scheda</button>
+         <button class="altundo" onclick="B.step='wizard'; renderBuild()">◀ Torna alle domande</button>
+         <button class="altundo" onclick="closeBuilder()">Annulla</button>`;
+  el.innerHTML=html;
+}
+
 /* ========================================================= STATE ========================================================= */
 const LS_STATE = 'fb16_state_v3';
 const LS_OLD_HIST = 'fb_history_v1';
-let S = null;   // { completed:[...], active:{...} }
+let DB = null;  // { current, profiles:{id:profilo} }
+let S = null;   // profilo corrente
 
 function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function fmtDate(iso){ const d=new Date(iso+'T00:00:00'); return d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'}); }
 function fmtShort(iso){ const d=new Date(iso+'T00:00:00'); return d.toLocaleDateString('it-IT',{day:'numeric',month:'short'}); }
 
 function sessionInfo(week, letter){
+  const pl = plan();
+  if(pl){
+    const L0 = Object.keys(pl.sessions);
+    const w = Math.min(pl.weeks, Math.max(1, week||1));
+    const L = L0.includes(letter) ? letter : L0[0];
+    const cyc = pl.deloadEvery || 4; const wi = (w-1)%cyc;
+    const phase = { name:pl.name, desc:pl.desc||'', setsByWeek:pl.setsByWeek, restSet:pl.restSet, restEx:pl.restEx, sessions:pl.sessions, weeks:[1,pl.weeks] };
+    return { week:w, slot:L0.indexOf(L), letter:L, phase, pIdx:0,
+             sets: pl.setsByWeek[Math.min(wi, pl.setsByWeek.length-1)],
+             deload: wi===cyc-1, tpl: pl.sessions[L], custom:true };
+  }
   const w = Math.min(16, Math.max(1, week||1));
   const L = SLOT_NAMES.includes(letter) ? letter : 'A';
   const pIdx = Math.min(3, Math.ceil(w/4)-1);
@@ -540,10 +1053,11 @@ function curInfo(){ return sessionInfo(S.active.week, S.active.letter); }
 function nextSlot(){
   const last = S.completed[S.completed.length-1];
   if(!last) return { week:1, letter:'A' };
-  let i = SLOT_NAMES.indexOf(last.letter||'A'); let w = last.week||1;
-  i++; if(i>2){ i=0; w++; }
-  if(w>16){ w=16; i=2; }
-  return { week:w, letter:SLOT_NAMES[i] };
+  const LS=planLetters();
+  let i = LS.indexOf(last.letter||LS[0]); let w = last.week||1;
+  i++; if(i>LS.length-1){ i=0; w++; }
+  if(w>planWeeks()){ w=planWeeks(); i=LS.length-1; }
+  return { week:w, letter:LS[i] };
 }
 function nextTrainingDate(){
   const d=new Date(); d.setHours(0,0,0,0);
@@ -575,16 +1089,26 @@ function renumber(){
 }
 
 async function load(){
-  S = await STORE.get();
-  if(!S){
-    S = { completed:[], active:null };
+  const raw = await STORE.get();
+  if(raw && raw.profiles){
+    DB = raw;
+  } else if(raw && (raw.completed || raw.active)){
+    const p = blankProfile('Francesco');
+    p.limits={knee:true,shoulder:false,back:false};
+    p.completed=raw.completed||[]; p.active=raw.active||null;
+    p.swaps=raw.swaps||{perm:{},today:{date:'',map:{}}}; p.pal=raw.pal||'petrolio';
+    DB = { current:'p1', profiles:{ p1:p } };
+  } else {
+    const p = blankProfile('Francesco'); p.limits={knee:true,shoulder:false,back:false};
+    DB = { current:'p1', profiles:{ p1:p } };
   }
-  let changed=false;
-  SEEDS.forEach(sd=>{ if(!S.completed.some(c=>c.date===sd.date)){ S.completed.push({...sd}); changed=true; } });
-  if(changed){ renumber(); S.active=null; }
+  if(!DB.profiles[DB.current]) DB.current=Object.keys(DB.profiles)[0];
+  addExt(DB.ext||{});
+  S = DB.profiles[DB.current];
+  Object.values(DB.profiles).forEach(p=>{ if(!p.eq) p.eq=ALL_EQ.slice(); if(!p.limits) p.limits={knee:false,shoulder:false,back:false}; if(!p.completed) p.completed=[]; });
   save(); ensureActive();
 }
-function save(){ STORE.set(S); flashSaved(); }
+function save(){ if(!DB) return; DB.profiles[DB.current]=S; STORE.set(DB); flashSaved(); }
 
 function mergeOldFormat(oldArr){
   // old: [{date, weights:{id:w}, setsDone, setsTotal}]
@@ -597,6 +1121,7 @@ function mergeOldFormat(oldArr){
   });
 }
 
+function swappedName(id){ const r=swapFor(id); return r===id ? LIB[id].name : LIB[r].name+' ⇄'; }
 function buildActive(w,L){
   const info = sessionInfo(w,L);
   const a = { week:info.week, letter:info.letter, sets:{}, weights:{}, fb:{}, finisherDone:false };
@@ -613,7 +1138,7 @@ function ensureActive(){
 function activeProgress(){ let d=0; if(S.active) Object.values(S.active.sets).forEach(v=>d+=v.filter(Boolean).length); return d + (S.active&&S.active.finisherDone?1:0); }
 // Settimana e sessione sono sempre scelte dall'utente: niente è bloccato dall'ordine.
 function pick(w,L){
-  w = Math.min(16, Math.max(1, w)); if(!SLOT_NAMES.includes(L)) L='A';
+  w = Math.min(planWeeks(), Math.max(1, w)); if(!planLetters().includes(L)) L=planLetters()[0];
   if(S.active && S.active.week===w && S.active.letter===L) return;
   if(activeProgress()>0 && !confirm('Cambiando sessione perdi le serie spuntate ma non ancora salvate. Continuare?')) return;
   buildActive(w,L); renderToday();
@@ -625,9 +1150,10 @@ function jumpToSlot(w,L){ pick(w,L); showView('Today'); }
 function allExercises(info){
   const out=[];
   const push=(arr,sec,setsOverride)=>arr.forEach(([id,val,tag])=>{
-    const lib=LIB[id];
+    const real = (sec==='main') ? swapFor(id) : id;
+    const lib=LIB[real];
     const sets = setsOverride!=null ? setsOverride : info.sets;
-    out.push({ key:id, id, lib, sec, sets, val, tag:tag||'' });
+    out.push({ key:real, id:real, orig:id, lib, sec, sets, val, tag:tag||'' });
   });
   push(WARMUP,'warm',1);
   push(info.tpl.main,'main');
@@ -659,13 +1185,13 @@ function suggest(id, info){
 function renderToday(){
   const list=document.getElementById('list');
   const info=curInfo();
-  document.getElementById('hWeek').textContent=`Settimana ${info.week} di 16 — Sessione ${info.letter}`;
-  document.getElementById('hPhase').textContent=`Fase ${info.pIdx+1}: ${info.phase.name}${info.deload?' · scarico':''}`;
+  document.getElementById('hWeek').textContent=`Settimana ${info.week} di ${planWeeks()} — Sessione ${info.letter}`;
+  document.getElementById('hPhase').textContent=(info.custom? info.phase.name : `Fase ${info.pIdx+1}: ${info.phase.name}`)+(info.deload?' · scarico':'');
   const alreadyDone=S.completed.some(c=>c.week===info.week&&c.letter===info.letter);
   document.getElementById('wkLabel').textContent=`Settimana ${info.week} · ${info.phase.name}${info.deload?' · scarico':''}`;
-  document.getElementById('chips').innerHTML=SLOT_NAMES.map((L,i)=>{
+  document.getElementById('chips').innerHTML=planLetters().map((L,i)=>{
     const done=S.completed.some(c=>c.week===info.week&&c.letter===L);
-    return `<div class="chip ${S.active.letter===L?'on':''} ${done?'done':''}" onclick="setSession('${L}')">Sessione ${L}<br><span style="font-weight:500">${SLOT_DAYS[i]}</span></div>`;
+    return `<div class="chip ${S.active.letter===L?'on':''} ${done?'done':''}" onclick="setSession('${L}')">Sessione ${L}<br><span style="font-weight:500">${planDays()[i]||''}</span></div>`;
   }).join('');
   document.getElementById('hMeta').innerHTML=`${info.sets} serie · recupero ${info.phase.restSet}s tra serie, ${info.phase.restEx}s tra esercizi ${alreadyDone?'· <b>già registrata</b>, la stai rifacendo':''}`;
 
@@ -729,9 +1255,26 @@ function exCard(e,info){
 
   const open=!!a._open && a._open[e.key];
   const howto=`<button class="howto-btn" onclick="toggleHow('${e.key}')">${open?'Nascondi':'Come si fa'}</button>
-    <div class="howto ${e.lib.warn?'warn':''} ${open?'':'hidden'}"><ul>${e.lib.howto.map(h=>'<li>'+h+'</li>').join('')}</ul></div>`;
+    <div class="howto ${e.lib.warn?'warn':''} ${open?'':'hidden'}"><ul>${e.lib.ext?'<li><b>Dalla libreria esterna:</b> indicazioni non verificate per le tue esclusioni.</li>':''}${e.lib.howto.map(h=>'<li>'+h+'</li>').join('')}</ul>${videoLink(e.lib.name)}</div>`;
 
-  card.innerHTML=`<div class="ex-head"><div><div class="ex-name">${e.lib.name}</div><div class="ex-target">${target}</div></div>${sugHtml}</div>${wtHtml}${setsHtml}${fbHtml}${howto}`;
+  // sostituzione esercizio
+  let nameHtml = `<div class="ex-name">${e.lib.name}</div>`;
+  let swapHtml = '';
+  const alts = (e.sec==='main') ? altsFor(e.orig) : [];
+  if(e.sec==='main' && PAT[e.orig] && !LOCKED.includes(e.orig)){
+    const changed = e.key!==e.orig;
+    nameHtml = `<button class="ex-name-btn" onclick="toggleSwapBox('${e.orig}')"><span class="ex-name">${e.lib.name}</span>${changed?'<span class="swaptag">sostituito</span>':''}<span class="swapcaret">cambia</span></button>`;
+    if(S.active._swap && S.active._swap[e.orig]){
+      swapHtml = `<div class="swapbox"><div class="q">Stesso schema motorio, con quello che hai in casa.</div>` +
+        alts.map(k=>`<div class="altrow"><div class="altname">${LIB[k].name}</div><div class="altbtns">
+          <button onclick="doSwap('${e.orig}','${k}',false)">Oggi</button>
+          <button onclick="doSwap('${e.orig}','${k}',true)">Sempre</button></div></div>`).join('') +
+        `<button class="altundo" onclick="swapSearch('${e.orig}')">Cerca nella libreria</button>` +
+        (changed ? `<button class="altundo" onclick="undoSwap('${e.orig}')">Torna a ${LIB[e.orig].name}</button>` : '') +
+        `</div>`;
+    }
+  }
+  card.innerHTML=`<div class="ex-head"><div>${nameHtml}<div class="ex-target">${target}</div></div>${sugHtml}</div>${swapHtml}${wtHtml}${setsHtml}${fbHtml}${howto}`;
   return card;
 }
 
@@ -831,6 +1374,34 @@ function startFinisher(key,rounds,work,rest){
 function renderProgram(){
   const el=document.getElementById('programList'); el.innerHTML='';
   const cur=curInfo(); const curWeek=cur.week;
+  document.getElementById('progMeta').innerHTML=`${S.name} · ${planName()} · ${planWeeks()} settimane · ${planDays().join(', ')}`;
+  document.getElementById('progActions').innerHTML =
+    `<button class="io-btn" onclick="openBuilder()">✎ Crea nuova scheda</button>` +
+    (plan() ? `<button class="io-btn" onclick="editProgram()">Modifica questa</button><button class="io-btn" onclick="usePreset()">Torna al preset 16 settimane</button>` : '');
+  const LS=planLetters();
+  if(plan()){
+    const pl=plan(); const blk=document.createElement('div'); blk.className='card phase-block';
+    let rows='';
+    for(let w=1;w<=pl.weeks;w++){
+      const dl=(w-1)%(pl.deloadEvery||4)===(pl.deloadEvery||4)-1; let dots='';
+      LS.forEach(L=>{ const done=S.completed.some(c=>c.week===w&&c.letter===L); const isCur=(w===cur.week&&L===cur.letter);
+        dots+=`<div class="dot ${done?'done':''} ${isCur?'next':''}" onclick="jumpToSlot(${w},'${L}')">${L}</div>`; });
+      rows+=`<div class="week-row ${w===curWeek?'current':''}"><div class="wn">Sett. ${w}${dl?'<div class="wdeload">scarico</div>':''}</div><div class="dots">${dots}</div><div class="wdeload">${pl.setsByWeek[Math.min((w-1)%(pl.deloadEvery||4), pl.setsByWeek.length-1)]} serie</div></div>`;
+    }
+    const sess=LS.map((L,i)=>`<b>${L} (${pl.days[i]||''})</b>: ${pl.sessions[L].main.map(x=>LIB[x[0]].name.split(' (')[0]).join(', ')}`).join('<br>');
+    blk.innerHTML=`<div class="phase-name">${pl.name}</div><div class="phase-desc">${pl.desc||''}</div>${rows}<div class="rule" style="margin-top:10px">${sess}</div>`;
+    el.appendChild(blk);
+    document.getElementById('rulesBox').innerHTML=`
+      <b>Regola base:</b> se chiudi tutte le serie con 2-3 ripetizioni ancora in canna, la volta dopo sali. Te lo propone la scheda in base al feedback (Facile / Giusto / Difficile).
+      <ul>
+        <li><b>Manubri:</b> +2 kg per manubrio · <b>Bilanciere / EZ:</b> +2,5 kg · <b>Kettlebell:</b> +4 kg</li>
+        <li><b>Serie nel ciclo:</b> ${pl.setsByWeek.join(' → ')}, poi si ripete.</li>
+        <li><b>Scarico</b> ogni ${pl.deloadEvery||4} settimane: meno serie e −15% sui carichi.</li>
+        <li><b>Due "Difficile" di fila:</b> resta su quel carico un'altra settimana.</li>
+        <li><b>Dolore:</b> fermati su quell'esercizio e sostituiscilo dal pulsante «cambia».</li>
+      </ul>`;
+    return;
+  }
   PHASES.forEach((p,pi)=>{
     const blk=document.createElement('div'); blk.className='card phase-block';
     let rows='';
@@ -863,11 +1434,11 @@ function renderProgram(){
 async function resetAll(){
   if(!confirm('Cancellare tutto lo storico e ripartire da zero?')) return;
   if(!confirm('Ultima conferma: senza backup i dati non tornano indietro.')) return;
-  S = { completed:[], active:null };
-  await save(); ensureActive(); renderToday(); renderHistory(); toast('Storico azzerato');
+  S.completed=[]; S.active=null;
+  save(); ensureActive(); renderToday(); renderHistory(); toast('Storico azzerato');
 }
 function renderHistory(){
-  document.getElementById('histSummary').textContent=`${S.completed.length} sessioni completate su ${TOTAL}`;
+  document.getElementById('histSummary').textContent=`${S.name} · ${S.completed.length} sessioni su ${planTotal()} — ${planName()}`;
   // progression box
   const ids=[...new Set(S.completed.flatMap(c=>Object.keys(c.ex||{})))];
   const pb=document.getElementById('progBox');
@@ -895,8 +1466,8 @@ function renderManual(week, letter){
   const ws=allExercises(info).filter(e=>e.lib.load&&e.sec!=='warm'&&e.sec!=='cool');
   document.getElementById('manualBox').innerHTML=`
     <div class="row"><label>Data</label><input type="date" id="mDate" value="${todayISO()}"></div>
-    <div class="row"><label>Settimana</label><select id="mWeek" onchange="renderManual(+this.value, document.getElementById('mLetter').value)">${Array.from({length:16},(_,i)=>i+1).map(x=>`<option ${x===info.week?'selected':''}>${x}</option>`).join('')}</select></div>
-    <div class="row"><label>Sessione</label><select id="mLetter" onchange="renderManual(+document.getElementById('mWeek').value, this.value)">${SLOT_NAMES.map(x=>`<option ${x===L?'selected':''}>${x}</option>`).join('')}</select></div>
+    <div class="row"><label>Settimana</label><select id="mWeek" onchange="renderManual(+this.value, document.getElementById('mLetter').value)">${Array.from({length:planWeeks()},(_,i)=>i+1).map(x=>`<option ${x===info.week?'selected':''}>${x}</option>`).join('')}</select></div>
+    <div class="row"><label>Sessione</label><select id="mLetter" onchange="renderManual(+document.getElementById('mWeek').value, this.value)">${planLetters().map(x=>`<option ${x===L?'selected':''}>${x}</option>`).join('')}</select></div>
     ${ws.map(e=>`<div class="row"><label>${e.lib.name.split(' (')[0]}</label><input type="number" inputmode="decimal" step="0.5" data-id="${e.id}" value="${suggest(e.id,info).w}"> <span class="wt-unit">kg</span></div>`).join('')}
     <div class="btns"><button class="io-btn" onclick="toggleManual()">Annulla</button><button class="io-btn" style="background:var(--green);color:var(--on-green);border:none" onclick="saveManual()">Salva</button></div>`;
 }
@@ -936,6 +1507,17 @@ function importData(evt){
 /* ========================================================= EXTRA ========================================================= */
 function renderExtra(){
   document.getElementById('extraBox').innerHTML=`
+  <h3>Profili</h3>
+  <div class="pillrow">${profileList().map(p=>`<button class="pillsel ${p.id===DB.current?'on':''}" onclick="switchProfile('${p.id}')">${p.name}</button>`).join('')}
+    <button class="pillsel" onclick="newProfile()">+ Nuovo</button></div>
+  <p>Ogni profilo ha la sua scheda, i suoi carichi e il suo storico. I limiti di uno non valgono per gli altri.</p>
+  <div class="pillrow"><button class="pillsel" onclick="renameProfile()">Rinomina «${S.name}»</button>
+    ${Object.keys(DB.profiles).length>1?`<button class="pillsel danger" onclick="deleteProfile('${DB.current}')">Elimina «${S.name}»</button>`:''}</div>
+  <h3>Limiti di ${S.name}</h3>
+  <p>Gli esercizi a rischio per queste zone non compaiono nel costruttore né tra le alternative.</p>
+  <div class="pillrow">${[['knee','Ginocchia'],['shoulder','Spalle'],['back','Schiena']].map(([k,lab])=>`<button class="pillsel ${S.limits[k]?'on':''}" onclick="toggleLimit('${k}')">${lab}</button>`).join('')}</div>
+  <h3>Attrezzatura</h3>
+  <div class="pillrow">${ALL_EQ.map(k=>`<button class="pillsel ${S.eq.includes(k)?'on':''}" onclick="toggleEq('${k}')">${EQ_LABEL[k]}</button>`).join('')}</div>
   <h3>Colori</h3>
   <div class="palrow">${PALETTES.map(p=>`<button class="palbtn" data-p="${p[0]}" onclick="applyPalette('${p[0]}')"><span class="palsw"><i style="background:${p[2]}"></i><i style="background:${p[3]}"></i><i style="background:${p[4]}"></i></span>${p[1]}</button>`).join('')}</div>
   <div class="switchrow">
@@ -964,6 +1546,9 @@ function renderExtra(){
 
   <h3>Attrezzatura usata nel programma</h3>
   <p>Rack con sbarra trazioni, panca regolabile, manubri esagonali, bilanciere olimpico, EZ, kettlebell, slam ball, palla medica, elastici, foam roller. Il jump box non serve in questo ciclo. La corda nemmeno.</p>
+
+  <h3>Libreria esercizi</h3>
+  <p>Oltre agli esercizi della scheda ci sono 1.324 esercizi cercabili da <b>cambia → Cerca nella libreria</b> e dal costruttore (⌕). Istruzioni dal dataset open source hasaneyldrm/exercises-dataset (licenza MIT), nomi tradotti. Non sono verificati per ginocchio, spalle e schiena: il filtro sulle zone da proteggere è automatico ma approssimativo.</p>
 
   <h3>Come non perdere i dati</h3>
   <p>Tutto è salvato sul telefono automaticamente. Ogni 2-3 settimane fai <b>Storico → Esporta backup</b> e tieni il file su Drive o dove vuoi. Se cambio la scheda o cambi telefono, importi quel file e ritrovi tutto.</p>`;
@@ -1027,8 +1612,11 @@ function toggleAwake(){ Awake.toggle(); }
 
 /* ========================================================= NAV / UTIL ========================================================= */
 function showView(v){
-  ['Today','Program','History','Extra'].forEach(x=>{ document.getElementById('view'+x).classList.toggle('hidden',x!==v); document.getElementById('tab'+x).classList.toggle('active',x===v); });
-  if(v==='Program') renderProgram(); if(v==='History') renderHistory(); if(v==='Extra') renderExtra();
+  ['Today','Program','History','Extra','Build'].forEach(x=>{
+    const el=document.getElementById('view'+x); if(el) el.classList.toggle('hidden',x!==v);
+    const tb=document.getElementById('tab'+x); if(tb) tb.classList.toggle('active', x===v || (v==='Build'&&x==='Program'));
+  });
+  if(v==='Program') renderProgram(); if(v==='History') renderHistory(); if(v==='Extra') renderExtra(); if(v==='Build') renderBuild();
   window.scrollTo(0,0);
 }
 let savedT=null; function flashSaved(){ const el=document.getElementById('autosave'); if(!el)return; el.style.color='var(--green)'; clearTimeout(savedT); savedT=setTimeout(()=>el.style.color='var(--muted)',1200); }
@@ -1061,6 +1649,7 @@ let _p0='petrolio'; try{ _p0=localStorage.getItem('fb16_pal')||'petrolio'; }catc
 applyPalette(_p0, true);
 if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('./sw.js'); }catch(e){} }
 Awake.init();
+loadExt();
 load().then(()=>{ if(S && S.pal) applyPalette(S.pal, true); renderToday(); });
 </script>
 </body>
